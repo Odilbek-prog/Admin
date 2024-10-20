@@ -1,0 +1,70 @@
+/* Konteyner uchun fon va markazlash */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+/* Forma uchun zamonaviy quti uslubi */
+.form {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 250px;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Sarlavha uchun qalin va katta matn */
+.heading {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+/* Inputlar uchun silliq ko'rinish */
+.input {
+  width: 90%;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+/* Input fokusi uslubi */
+.input:focus {
+  border-color: #9b59b6;
+  outline: none;
+  box-shadow: 0 0 8px rgba(155, 89, 182, 0.2);
+}
+
+/* Tugma uchun zamonaviy uslub */
+.button {
+  width: 100%;
+  padding: 15px;
+  background-color: #9b59b6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Tugma hover effekti */
+.button:hover {
+  background-color: #884ea0;
+}
+
+/* Tugma bosilgan vaqtda effekti */
+.button:active {
+  transform: scale(0.98);
+}
