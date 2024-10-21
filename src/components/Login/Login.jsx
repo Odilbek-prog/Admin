@@ -24,7 +24,7 @@ function Login() {
         .then((data) => {
           toast.success("Admin Xush kelibsiz!");
           localStorage.setItem("token", data?.data?.tokens?.accessToken?.token);
-          window.location.href = "/home";
+          window.location.href = "/";
         });
     } else {
       toast.error("Ism yoki parol xato");
