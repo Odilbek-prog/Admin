@@ -3,6 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  position: absolute !important;
   height: 100vh;
   background: linear-gradient(135deg, #71b7e6, #9b59b6);
 }
