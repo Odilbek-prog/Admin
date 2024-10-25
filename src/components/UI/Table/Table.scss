@@ -1,25 +1,30 @@
 .table-container {
   border-radius: 5px;
-  text-align: end;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  img {
+    width: 100px;
+    height: 50px;
+  }
   form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    gap: 10px;
     label {
       display: flex;
       flex-direction: column;
-      align-items: start;
-      width: 100%;
-      input {
-        width: 80%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-      }
+    }
+    input {
+      width: 80%;
+      padding: 10px;
     }
   }
-
+  .modaldiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .add {
     background-color: #3498db;
     border: none;
@@ -28,7 +33,6 @@
     margin: 10px 0;
     border-radius: 5px;
     cursor: pointer;
-    margin-right: 15px;
 
     &:hover {
       background-color: #2980b9;
@@ -38,10 +42,6 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    img {
-      width: 100px;
-      height: 50px;
-    }
 
     th,
     td {
@@ -62,11 +62,11 @@
         }
 
         &.edit {
-          background-color: #4caf50; /* Yashil rang */
+          background-color: #4caf50;
         }
 
         &.delete {
-          background-color: #f44336; /* Qizil rang */
+          background-color: #f44336;
         }
       }
     }
@@ -104,4 +104,33 @@
       }
     }
   }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 }

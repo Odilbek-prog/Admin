@@ -1,7 +1,12 @@
 import React from "react";
+import Table from "../components/UI/Table/Table";
 
 const Locations = () => {
-  return <div>Locations</div>;
+  return (
+    <div className="wrapper">
+      <Table />
+    </div>
+  );
 };
 
 export default Locations;

@@ -4,22 +4,22 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Loader from "../Loader/Loader";
 import Modal from "../Modal/Modal";
+import { useLocation } from "react-router-dom";
 
 const Table = () => {
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(5);
-  var formdata = new FormData();
-  formdata.append("name_en", "");
-  formdata.append("name_ru", "");
-  formdata.append("images", "");
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation()?.pathname;
 
   // getCategories
   async function getCategories() {
     await axios
-      .get(`https://autoapi.dezinfeksiyatashkent.uz/api/categories`)
+      .get(`https://autoapi.dezinfeksiyatashkent.uz/api${location}`)
       .then((data) => {
+        console.log(data);
         if (data?.data?.success) {
           setCategories(data?.data?.data);
         } else {
@@ -35,11 +35,11 @@ const Table = () => {
   // Add function
   const handleAdd = (e) => {
     e.preventDefault();
-
+    const formData = new FormData(e.target);
     axios
       .post(
-        `https://autoapi.dezinfeksiyatashkent.uz/api/categories`,
-        formdata,
+        `https://autoapi.dezinfeksiyatashkent.uz/api${location}`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -60,10 +60,43 @@ const Table = () => {
       });
   };
 
+  // Edit function
+  const handleEdit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    axios
+      .put(
+        `https://autoapi.dezinfeksiyatashkent.uz/api${location}/${selectedCategory.id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((data) => {
+        if (data?.data?.success) {
+          setCategories(
+            categories.map((category) =>
+              category.id === selectedCategory.id ? data?.data?.data : category
+            )
+          );
+          toast.success("Category edited successfully");
+          setIsModalOpen(false);
+          setSelectedCategory(null);
+        } else {
+          toast.error("Failed to edit category");
+        }
+      })
+      .catch((error) => {
+        toast.error("Error editing category");
+      });
+  };
+
   // Delete function
   const handleDelete = (id) => {
     axios
-      .delete(`https://autoapi.dezinfeksiyatashkent.uz/api/categories/${id}`, {
+      .delete(`https://autoapi.dezinfeksiyatashkent.uz/api${location}/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -97,65 +130,205 @@ const Table = () => {
         <Loader />
       ) : (
         <>
-          <button className="add" onClick={() => setIsModalOpen(true)}>
-            Add
-          </button>
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            <form onSubmit={handleAdd}>
-              <label>
-                Name (EN):
-                <input
-                  type="text"
-                  value={formdata.name_en}
-                  onChange={(e) => formdata.set("name_en", e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Name (RU):
-                <input
-                  type="text"
-                  value={formdata.name_ru}
-                  onChange={(e) => formdata.set("name_ru", e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Image Source:
-                <input
-                  type="file"
-                  onChange={(e) => formdata.set("images", e.target.files[0])}
-                  accept="image/*"
-                  required
-                />
-              </label>
-              <button type="submit">Add</button>
+          <div className="modaldiv">
+            <h1 style={{ textTransform: "capitalize" }}>{location.slice(1)}</h1>
+            <button className="add" onClick={() => setIsModalOpen(true)}>
+              Add
+            </button>
+          </div>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setSelectedCategory(null);
+            }}
+          >
+            <form onSubmit={selectedCategory ? handleEdit : handleAdd}>
+              {location === "/categories" ? (
+                <>
+                  <label>
+                    Name (EN):
+                    <input
+                      type="text"
+                      name="name_en"
+                      defaultValue={
+                        selectedCategory ? selectedCategory.name_en : ""
+                      }
+                      required
+                    />
+                  </label>
+                  <label>
+                    Name (RU):
+                    <input
+                      type="text"
+                      name="name_ru"
+                      defaultValue={
+                        selectedCategory ? selectedCategory.name_ru : ""
+                      }
+                      required
+                    />
+                  </label>
+                  <label>
+                    Image Source:
+                    <input type="file" name="images" accept="image/*" />
+                  </label>
+                </>
+              ) : location === "/brands" ? (
+                <>
+                  <label>
+                    Model:
+                    <input
+                      type="text"
+                      name="title"
+                      defaultValue={
+                        selectedCategory ? selectedCategory.title : ""
+                      }
+                      required
+                    />
+                  </label>
+                  <label>
+                    Image Source:
+                    <input type="file" name="images" accept="image/*" />
+                  </label>
+                </>
+              ) : location === "/cities" || location === "/locations" ? (
+                <>
+                  <label>
+                    Model:
+                    <input
+                      type="text"
+                      name="name"
+                      defaultValue={
+                        selectedCategory ? selectedCategory.name : ""
+                      }
+                      required
+                    />
+                  </label>
+                  <label>
+                    Text:
+                    <input
+                      type="text"
+                      name="text"
+                      defaultValue={
+                        selectedCategory ? selectedCategory.text : ""
+                      }
+                      required
+                    />
+                  </label>
+                  <label>
+                    Image Source:
+                    <input type="file" name="images" accept="image/*" />
+                  </label>
+                </>
+              ) : location === "/models" ? (
+                <>
+                  <label>
+                    Model:
+                    <input
+                      type="text"
+                      name="name"
+                      defaultValue={
+                        selectedCategory ? selectedCategory.name : ""
+                      }
+                      required
+                    />
+                  </label>
+                </>
+              ) : null}
+
+              <button type="submit">{selectedCategory ? "Edit" : "Add"}</button>
             </form>
           </Modal>
           <table>
             <thead>
-              <tr>
-                <th>Name_en</th>
-                <th>Name_ru</th>
-                <th>Status</th>
-                <th>Images</th>
-                <th>Actions</th>
-              </tr>
+              {location === "/categories" ? (
+                <tr>
+                  <th>Name_en</th>
+                  <th>Name_ru</th>
+                  <th>Status</th>
+                  <th>Images</th>
+                  <th>Actions</th>
+                </tr>
+              ) : location === "/brands" ? (
+                <tr>
+                  <th>Model</th>
+                  <th>Status</th>
+                  <th>Images</th>
+                  <th>Actions</th>
+                </tr>
+              ) : location === "/cities" || location === "/locations" ? (
+                <tr>
+                  <th>Name</th>
+                  <th>Text</th>
+                  <th>Status</th>
+                  <th>Images</th>
+                  <th>Actions</th>
+                </tr>
+              ) : location === "/models" ? (
+                <tr>
+                  <th>Name</th>
+                  <th>Brand</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              ) : null}
             </thead>
             <tbody>
               {currentCategories.map((elem, index) => (
                 <tr key={index}>
-                  <td>{elem?.name_en}</td>
-                  <td>{elem?.name_ru}</td>
-                  <td>Active</td>
+                  {location === "/categories" ? (
+                    <>
+                      <td>{elem?.name_en}</td>
+                      <td>{elem?.name_ru}</td>
+                      <td>Active</td>
+                      <td>
+                        <img
+                          src={`https://autoapi.dezinfeksiyatashkent.uz/api/uploads/images/${elem.image_src}`}
+                          alt=""
+                        />
+                      </td>
+                    </>
+                  ) : location === "/brands" ? (
+                    <>
+                      <td>{elem?.title}</td>
+                      <td>Active</td>
+                      <td>
+                        <img
+                          src={`https://autoapi.dezinfeksiyatashkent.uz/api/uploads/images/${elem.image_src}`}
+                          alt=""
+                        />
+                      </td>
+                    </>
+                  ) : location === "/cities" || location === "/locations" ? (
+                    <>
+                      <td>{elem?.name}</td>
+                      <td>{elem?.text}</td>
+                      <td>Active</td>
+                      <td>
+                        <img
+                          src={`https://autoapi.dezinfeksiyatashkent.uz/api/uploads/images/${elem.image_src}`}
+                          alt=""
+                        />
+                      </td>
+                    </>
+                  ) : location === "/models" ? (
+                    <>
+                      <td>{elem?.name}</td>
+                      <td>{elem?.brand_title}</td>
+                      <td>Active</td>
+                    </>
+                  ) : null}
+
                   <td>
-                    <img
-                      src={`https://autoapi.dezinfeksiyatashkent.uz/api/uploads/images/${elem.image_src}`}
-                      alt=""
-                    />
-                  </td>
-                  <td>
-                    <button className="edit">Edit</button>
+                    <button
+                      className="edit"
+                      onClick={() => {
+                        setSelectedCategory(elem);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Edit
+                    </button>
                     <button
                       className="delete"
                       onClick={() => handleDelete(elem?.id)}
