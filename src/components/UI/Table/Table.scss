@@ -74,7 +74,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    height: 500px;
+    max-height: 500px;
     overflow: auto;
     label {
       display: flex;

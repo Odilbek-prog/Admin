@@ -23,6 +23,7 @@ const Table = () => {
   const [selectedlocations, setSelectedlocations] = useState("");
   const [City, setCity] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
+  const [inclusive, setinclusive] = useState(false);
 
   // getCategories
   async function getCategories() {
@@ -60,6 +61,7 @@ const Table = () => {
       formData.append("location_id", selectedlocations);
       formData.append("city_id", selectedCity);
       formData.append("model_id", selectedModel);
+      formData.append("inclusive", inclusive);
     }
 
     axios
@@ -100,6 +102,7 @@ const Table = () => {
       formData.append("location_id", selectedlocations);
       formData.append("city_id", selectedCity);
       formData.append("model_id", selectedModel);
+      formData.append("inclusive", inclusive);
     }
 
     axios
@@ -674,8 +677,11 @@ const Table = () => {
                       type="checkbox"
                       name="inclusive"
                       defaultValue={
-                        selectedCategory ? selectedCategory.inclusive : false
+                        selectedCategory ? selectedCategory.inclusive : Boolean
                       }
+                      onClick={() => {
+                        setinclusive(!inclusive);
+                      }}
                     />
                     <span class="slider round"></span>
                   </label>
